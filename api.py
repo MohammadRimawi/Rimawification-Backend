@@ -115,7 +115,7 @@ def get_task(task_id):
             WHERE
                 task_id = :task_id
             
-            ''',task_id=task_id).dict()
+            ''',task_id=task_id).dicts()
        
         response['response']['status'] = 200
 

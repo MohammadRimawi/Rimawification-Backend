@@ -36,8 +36,8 @@ def after_request_func(response):
     if response.status_code >= 400 :
         g.transaction.rollback()
         res = response.get_json()
-        if 'server message' in res:
-            pprint(res['server message'])
+        # if 'server message' in res:
+        #     pprint(res['server message'])
         if 'response' in res and 'error' in res['response']:
             pprint(res['response']['error'])
     else:

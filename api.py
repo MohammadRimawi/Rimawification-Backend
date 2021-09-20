@@ -49,14 +49,14 @@ def after_request_func(response):
 
 
 
-# Description   :   Gets all widgets that are assigned to a page and thier readable information in a dict
-# End-point     :   /api/get/all_page_widgets
+# Description   :   Gets all tasks
+# End-point     :   /api/get/tasks
 # Methods       :   [ POST ]
 # Takes         :   Nothing.
-# Returns       :   widget_id, name ,page, order_by
+# Returns       :   list of dicts of tasks [ task_id , title, description , color ]
 
 @app.route("/api/get/tasks", methods=['POST','GET'])
-def get_all_page_widgets():
+def all_tasks():
     
     response = {}
     response['data'] = {}
@@ -70,6 +70,52 @@ def get_all_page_widgets():
             FROM 
                tasks
             ''').dicts()
+       
+        response['response']['status'] = 200
+
+    except Exception as e:
+        response['response']['error'] = 'Server Error!\n"'+str(e)+'"' 
+        response['response']['status'] = 500
+    finally:
+        return response,response['response']['status']
+
+
+
+# Description   :   Gets task
+# End-point     :   /api/get/tasks
+# Methods       :   [ POST ]
+# Takes         :   task_id.
+# Returns       :   dict of task and its todos [ task_id , title, description , color ]
+
+@app.route("/api/get/task/<task_id>", methods=['POST','GET'])
+def get_task(task_id):
+    
+    response = {}
+    response['data'] = {}
+    response['response'] = {}
+
+    try:  
+        response['data'] = sql(g.conn,
+        '''
+            SELECT 
+                *
+            FROM 
+               tasks
+            WHERE
+                task_id = :task_id
+            
+            ''',task_id=task_id).dict()
+
+        response['data']['todos'] = sql(g.conn,
+        '''
+            SELECT 
+                *
+            FROM 
+               todo
+            WHERE
+                task_id = :task_id
+            
+            ''',task_id=task_id).dict()
        
         response['response']['status'] = 200
 

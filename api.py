@@ -26,7 +26,7 @@ def before_request_func():
     g.transaction = g.conn.begin()
   
     g.data = {}
-    if request.data:
+    if request.method.lower() == "post" and request.data:
         g.data = request.get_json()
     
 
@@ -36,8 +36,6 @@ def after_request_func(response):
     if response.status_code >= 400 :
         g.transaction.rollback()
         res = response.get_json()
-        # if 'server message' in res:
-        #     pprint(res['server message'])
         if 'response' in res and 'error' in res['response']:
             pprint(res['response']['error'])
     else:

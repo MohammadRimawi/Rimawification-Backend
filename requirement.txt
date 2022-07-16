@@ -1,0 +1,7 @@
+flask
+pprintpp
+jsql
+mysql-connector-python
+pprintpp
+python-dotenv
+sqlalchemy
